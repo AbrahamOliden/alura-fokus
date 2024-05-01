@@ -6,6 +6,7 @@ const interExclusiveButtons = document.querySelectorAll('.app__card-button');
 const focusButton = document.querySelector('.app__card-button--enfoque');
 const shortRestButton = document.querySelector('.app__card-button--corto')
 const longRestButton = document.querySelector('.app__card-button--largo');
+const displayTime = document.querySelector('#timer');
 const musicButton = document.querySelector('#alternar-musica');
 const startPauseButton = document.querySelector('#start-pause');
 const startPauseText = document.querySelector('#start-pause span');
@@ -22,23 +23,26 @@ const pauseAudio = new Audio('./sonidos/pause.mp3');
 const playAudio = new Audio('./sonidos/play.wav');
 
 // Initial conditions for timer
-let elapsedTime = 5;
+let elapsedTime = 1500;
 let interval = null;
 
 musicAudio.loop = true;
 
 // Buttons' event listeners
 focusButton.addEventListener('click', () => {
+    elapsedTime = 1500;
     changeContext('enfoque');
     focusButton.classList.add('active');
 } );
 
 shortRestButton.addEventListener('click', () => {
+    elapsedTime = 300;
     changeContext('descanso-corto');
     shortRestButton.classList.add('active');
 } );
 
 longRestButton.addEventListener('click', () => {
+    elapsedTime = 900;
     changeContext('descanso-largo');
     longRestButton.classList.add('active');
 
@@ -54,6 +58,7 @@ musicButton.addEventListener('change', () => {
 function changeContext(context) {
     html.setAttribute('data-contexto', context);
     image.setAttribute('src', `/imagenes/${context}.png`);
+    showDisplayTime();
 
     switch (context) {
         case 'enfoque':
@@ -94,7 +99,7 @@ const countdown = () => {
     startPauseImage.setAttribute('src', pauseImage);
     startPauseText.textContent = 'Pause';
     elapsedTime--;
-    console.log(elapsedTime);
+    showDisplayTime();
 };
 
 startPauseButton.addEventListener('click', startPause);
@@ -117,3 +122,11 @@ function restart() {
     startPauseImage.setAttribute('src', playImage);
     startPauseText.textContent = 'Start';
 };
+
+function showDisplayTime() {
+    const time = new Date(elapsedTime * 1000);
+    const formattedTime = time.toLocaleTimeString('es-MX', {minute: '2-digit', second: '2-digit'});
+    displayTime.innerHTML = `${formattedTime}`;
+};
+
+showDisplayTime();
